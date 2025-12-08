@@ -14,7 +14,6 @@ struct Student {
 char currentUserRole[20];
 char currentUser[50];
 
-/* Function Declarations */
 int loginSystem();
 void mainmenu();
 void adminMenu();
@@ -29,17 +28,14 @@ void updateStudent();
 void deleteStudent();
 
 int main() {
-
     if (loginSystem()) {
         mainmenu();
     } else {
         printf("Login failed. Exiting program.\n");
     }
-
     return 0;
 }
 
-/* ================= LOGIN SYSTEM ================= */
 int loginSystem() {
     char username[20], password[20];
     char fileuser[20], filepass[20], fileRole[20];
@@ -69,27 +65,20 @@ int loginSystem() {
     return 0;
 }
 
-/* ================= MAIN MENU (FIXED LOGOUT) ================= */
 void mainmenu() {
-
     if (strcmp(currentUserRole, "ADMIN") == 0) {
         adminMenu();
-    } 
-    else if (strcmp(currentUserRole, "STAFF") == 0) {
+    } else if (strcmp(currentUserRole, "STAFF") == 0) {
         staffMenu();
-    }
-    else if (strcmp(currentUserRole, "USER") == 0) {
+    } else if (strcmp(currentUserRole, "USER") == 0) {
         userMenu();
-    }
-    else {
+    } else {
         guestMenu();
     }
 
-    // After logout, program ends.
     printf("\nYou have been logged out.\n");
 }
 
-/* ================= STAFF MENU ================= */
 void staffMenu() {
     int choice;
     do {
@@ -105,13 +94,12 @@ void staffMenu() {
             case 1: addStudent(); break;
             case 2: viewStudents(); break;
             case 3: searchStudent(); break;
-            case 4: return;  // Logout
+            case 4: return;
             default: printf("Invalid choice! Try again.\n");
         }
     } while (1);
 }
 
-/* ================= USER MENU ================= */
 void userMenu() {
     int choice;
     do {
@@ -119,28 +107,6 @@ void userMenu() {
         printf("1. View Students\n");
         printf("2. Search Student\n");
         printf("3. Logout\n");
-
-        printf("Enter your choice: ");
-        scanf("%d", &choice);
-
-        switch (choice) {
-            case 1: viewStudents(); break;
-            case 2: searchStudent(); break;
-            case 3: return;  // Logout
-            default: printf("Invalid choice! Try again.\n");
-        }
-    } while (1);
-}
-
-/* ================= GUEST MENU ================= */
-void guestMenu() {
-    int choice;
-    do {
-        printf("\n=== GUEST MENU ===\n");
-        printf("1. View Students\n");
-        printf("2. Search Student\n");
-        printf("3. Logout\n");
-
         printf("Enter your choice: ");
         scanf("%d", &choice);
 
@@ -153,10 +119,27 @@ void guestMenu() {
     } while (1);
 }
 
-/* ================= ADMIN MENU ================= */
+void guestMenu() {
+    int choice;
+    do {
+        printf("\n=== GUEST MENU ===\n");
+        printf("1. View Students\n");
+        printf("2. Search Student\n");
+        printf("3. Logout\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1: viewStudents(); break;
+            case 2: searchStudent(); break;
+            case 3: return;
+            default: printf("Invalid choice! Try again.\n");
+        }
+    } while (1);
+}
+
 void adminMenu() {
     int choice;
-
     do {
         printf("\n=== ADMIN MENU ===\n");
         printf("1. Add Student\n");
@@ -177,11 +160,9 @@ void adminMenu() {
             case 6: return;
             default: printf("Invalid choice! Try again.\n");
         }
-
     } while (1);
 }
 
-/* ================= ADD STUDENT ================= */
 void addStudent() {
     FILE *fp = fopen(STUDENT_FILE, "a");
     struct Student st;
@@ -204,7 +185,6 @@ void addStudent() {
     printf("Student added successfully.\n");
 }
 
-/* ================= VIEW STUDENTS ================= */
 void viewStudents() {
     FILE *fp = fopen(STUDENT_FILE, "r");
     struct Student st;
@@ -224,7 +204,6 @@ void viewStudents() {
     fclose(fp);
 }
 
-/* ================= SEARCH STUDENT ================= */
 void searchStudent() {
     int rollno, found = 0;
     struct Student st;
@@ -252,7 +231,6 @@ void searchStudent() {
     fclose(fp);
 }
 
-/* ================= UPDATE STUDENT ================= */
 void updateStudent() {
     int rollno, found = 0;
     struct Student st;
@@ -271,12 +249,10 @@ void updateStudent() {
     while (fscanf(fp, "%d %s %f", &st.rollno, st.name, &st.marks) == 3) {
         if (st.rollno == rollno) {
             printf("Current Record: %d %s %.2f\n", st.rollno, st.name, st.marks);
-
             printf("Enter New Name: ");
             scanf("%s", st.name);
             printf("Enter New Marks: ");
             scanf("%f", &st.marks);
-
             found = 1;
         }
         fprintf(temp, "%d %s %.2f\n", st.rollno, st.name, st.marks);
@@ -295,7 +271,6 @@ void updateStudent() {
     }
 }
 
-/* ================= DELETE STUDENT ================= */
 void deleteStudent() {
     int rollno, found = 0;
     struct Student st;
@@ -331,4 +306,3 @@ void deleteStudent() {
         remove("temp.txt");
     }
 }
-
