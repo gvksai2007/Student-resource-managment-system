@@ -1,0 +1,176 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>  
+
+struct Node {
+    int data;
+    struct Node* next;
+};
+
+struct Node* head = NULL;
+
+
+void clear() {
+    #ifdef _WIN32
+        system("cls");
+    #else
+        system("clear");
+    #endif
+}
+
+void slowPrint(const char* text) {
+    while (*text) {
+        printf("%c", *text);
+        fflush(stdout);
+        usleep(40000); // 40 ms delay
+        text++;
+    }
+}
+
+// Display linked list visually
+void displayList() {
+    struct Node* temp = head;
+
+    printf("\n   LINKED LIST:  ");
+    while (temp != NULL) {
+        printf("[ %d ] -> ", temp->data);
+        temp = temp->next;
+        usleep(80000); // animate node-by-node print
+    }
+    printf("NULL\n");
+}
+
+
+void insertNode(int value) {
+    clear();
+    slowPrint("Creating new node...\n");
+    usleep(300000);
+
+    printf("\n   [ %d ]\n", value);
+    slowPrint("Node created!\n\n");
+    sleep(1);
+
+    struct Node* newNode = malloc(sizeof(struct Node));
+    newNode->data = value;
+    newNode->next = NULL;
+
+    slowPrint("Searching correct position...\n");
+    usleep(500000);
+
+    if (head == NULL) {
+        slowPrint("\nList empty → Inserting as first node...\n");
+        head = newNode;
+    } else {
+        struct Node* temp = head;
+
+        slowPrint("Moving through list:\n");
+        while (temp->next != NULL) {
+            printf("[ %d ] -> ", temp->data);
+            fflush(stdout);
+            usleep(300000);
+            temp = temp->next;
+        }
+
+        slowPrint("\nReached end → Attaching new node...\n");
+        temp->next = newNode;
+    }
+
+    sleep(1);
+    clear();
+    slowPrint("Node Inserted Successfully!\n");
+    displayList();
+    sleep(1);
+}
+
+// Animated Delete
+void deleteNode(int value) {
+    clear();
+    slowPrint("Searching node to delete...\n");
+    usleep(400000);
+
+    if (head == NULL) {
+        slowPrint("\nList is empty! Nothing to delete.\n");
+        sleep(1);
+        return;
+    }
+
+    struct Node* temp = head;
+    struct Node* prev = NULL;
+
+    // If first node is to be deleted
+    if (temp->data == value) {
+        slowPrint("\nNode found at head. Removing...\n");
+        head = temp->next;
+        free(temp);
+        sleep(1);
+        clear();
+        slowPrint("Node Deleted!\n");
+        displayList();
+        return;
+    }
+
+    
+    while (temp != NULL && temp->data != value) {
+        printf("[ %d ] -> ", temp->data);
+        usleep(200000);
+        prev = temp;
+        temp = temp->next;
+    }
+
+    if (temp == NULL) {
+        slowPrint("\nValue not found in list!\n");
+        sleep(1);
+        return;
+    }
+
+    slowPrint("\nNode found! Deleting...\n");
+    prev->next = temp->next;
+    free(temp);
+
+    sleep(1);
+    clear();
+    slowPrint("Node Deleted!\n");
+    displayList();
+}
+
+// MAIN MENU
+int main() {
+    int choice, value;
+
+    while (1) {
+        printf("\n\n=========== ANIMATION LINKED LIST SIMULATION ===========");
+        printf("\n1. Insert Node");
+        printf("\n2. Delete Node");
+        printf("\n3. Display List");
+        printf("\n4. Exit");
+        printf("\n\nEnter choice: ");
+        scanf("%d", &choice);
+
+        switch(choice) {
+            case 1:
+                printf("Enter value to insert: ");
+                scanf("%d", &value);
+                insertNode(value);
+                break;
+
+            case 2:
+                printf("Enter value to delete: ");
+                scanf("%d", &value);
+                deleteNode(value);
+                break;
+
+            case 3:
+                clear();
+                displayList();
+                break;
+
+            case 4:
+                clear();
+                slowPrint("Exiting simulation...\n");
+                return 0;
+
+            default:
+                printf("Invalid input!\n");
+        }
+    }
+}
